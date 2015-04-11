@@ -1,0 +1,20 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  #cache_directories:
+  #  - "~/docker"
+
+  override:
+    # If there is a tar of all of the docker images, then restore it.
+    #- if [[ -e ~/docker/image.tar ]]; then SAVE=0; docker load -i ~/docker/image.tar; fi
+
+    - docker pull pelson/conda64_obvious_ci
+
+    # Save the docker image for next time.
+    #- mkdir -p ~/docker; docker save pelson/conda64_obvious_ci > ~/docker/image.tar
+
+test:
+  override:
+    - ./run_build.sh
