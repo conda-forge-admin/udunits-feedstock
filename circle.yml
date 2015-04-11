@@ -3,18 +3,13 @@ machine:
     - docker
 
 dependencies:
-  #cache_directories:
-  #  - "~/docker"
-
+  # Note, we used to use the naive caching of docker images, but found that it was quicker
+  # just to pull each time. #rollondockercaching
   override:
-    # If there is a tar of all of the docker images, then restore it.
-    #- if [[ -e ~/docker/image.tar ]]; then SAVE=0; docker load -i ~/docker/image.tar; fi
-
     - docker pull pelson/conda64_obvious_ci
-
-    # Save the docker image for next time.
-    #- mkdir -p ~/docker; docker save pelson/conda64_obvious_ci > ~/docker/image.tar
 
 test:
   override:
-    - ./run_build.sh
+    # Run, test and (if we have a BINSTAR_TOKEN) upload the distributions.
+    - ./run_docker_build.sh -u conda-forge -c main
+
