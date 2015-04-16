@@ -23,7 +23,7 @@ fi
 
 
 cat << EOF | docker run -i -v ${PWD}/recipe:/recipe_root -v ${PWD}/build_artefacts:/conda_build_dir \
-                        -a stdin -a stdout -a stderr pelson/conda64_obvious_ci bash
+                        -a stdin -a stdout -a stderr pelson/conda32_obvious_ci linux32
 cat << CONDARC > ~/.condarc
 channels:
  - pelson
@@ -54,7 +54,7 @@ EOF
 
 # In a separate docker, run the test...
 cat << EOF | docker run -i -v ${PWD}/recipe:/recipe_root -v ${PWD}/build_artefacts:/conda_build_dir \
-                        -a stdin -a stdout -a stderr pelson/conda64_obvious_ci bash
+                        -a stdin -a stdout -a stderr pelson/conda32_obvious_ci linux32
 
 cat << CONDARC > ~/.condarc
 channels:
