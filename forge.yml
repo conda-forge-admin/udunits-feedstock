@@ -1,0 +1,9 @@
+docker:
+    image: pelson/conda64_obvious_ci
+    command: bash
+templates:
+    run_docker_build: run_docker_build_matrix.tmpl
+build_setup: yum install -y expat-devel
+matrix:
+    - export CONDA_NPY=18 && export CONDA_PY=27
+    - export CONDA_NPY=19 && export CONDA_PY=27

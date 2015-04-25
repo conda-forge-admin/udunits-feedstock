@@ -41,10 +41,16 @@ def built_distribution_already_exists(cli, meta, owner):
 
 
 def upload(cli, meta, owner, channels):
-    subprocess.check_call(['binstar', 'upload', bldpkg_path(meta),
-                                  '--user={}'.format(owner),
-                                  '--channel={}'.format(channels)],
-                                 env=os.environ)
+    try:
+        with open('binstar.token', 'w') as fh:
+            fh.write(cli.token)
+        subprocess.check_call(['binstar', '-t', 'binstar.token',
+                               'upload', bldpkg_path(meta),
+                               '--user={}'.format(owner),
+                               '--channel={}'.format(channels)],
+                              env=os.environ)
+    finally:
+        os.remove('binstar.token')
 
 
 def distribution_exists_on_channel(binstar_cli, meta, owner, channel='main'):
