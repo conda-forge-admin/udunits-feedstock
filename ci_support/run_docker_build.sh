@@ -13,7 +13,7 @@ while getopts :u:c: OPT; do
       u)
         UPLOAD_OWNER="${OPTARG}" ;;
       c)
-        UPLOAD_CHANNEL="$OPTARG}" ;;
+        UPLOAD_CHANNEL="${$OPTARG}" ;;
       [?])
         # got invalid option
         echo "Usage: $0 [-u upload-owner] [-c upload-channel]" >&2
@@ -54,16 +54,9 @@ conda info
 
 yum install -y expat-devel
 
-# Embarking on 2 case(s).
+# Embarking on 1 case(s).
 
     set -x
-    export CONDA_NPY=18 && export CONDA_PY=27
-    set +x
-    conda build --no-test /recipe_root || exit 1
-    
-
-    set -x
-    export CONDA_NPY=19 && export CONDA_PY=27
     set +x
     conda build --no-test /recipe_root || exit 1
     
@@ -85,14 +78,8 @@ echo "$config" > ~/.condarc
 conda info
 
 
-
-    export CONDA_NPY=18 && export CONDA_PY=27
-    conda build --test /recipe_root || exit $?
-    /recipe_root/ci_support/upload_or_check_non_existence.py /recipe_root $UPLOAD_OWNER --channel=$UPLOAD_CHANNEL || exit $?
     
+    conda build --test /recipe_root || exit 1
+    /recipe_root/ci_support/upload_or_check_non_existence.py /recipe_root $UPLOAD_OWNER --channel=$UPLOAD_CHANNEL || exit 1
 
-    export CONDA_NPY=19 && export CONDA_PY=27
-    conda build --test /recipe_root || exit $?
-    /recipe_root/ci_support/upload_or_check_non_existence.py /recipe_root $UPLOAD_OWNER --channel=$UPLOAD_CHANNEL || exit $?
-    
 EOF

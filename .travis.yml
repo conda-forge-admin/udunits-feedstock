@@ -1,30 +1,40 @@
-# The language in this case has no bearing - we are going to be making use of "conda" for a
-# python distribution for the scientific python stack.
-language: c
 
-os:
- - linux
- - osx
+
+
+
+
+language: objective-c
+
+
 
 env:
-    global:
-        # Add the BINSTAR_TOKEN environment variable. This has been generated with "" then "travis encrypt BINSTAR_TOKEN=<token_id> --repo SciTools/conda-recipes-scitools"
-        secure: "EM0pZljYUF5KoJPKbJcNLrAoc6x0iV7QsSbJHRPF3GViV8dX8d0O0HB7Bh++84uf/114eLhhmRCu82YuuehVKFhx7oE461jrdeoPzMK9Em80iufw6q0/gzNaWpOlQNPFqAk19ElV+ADfNp8Ju2kw1FHg/ggEqlp49fPkPPKoG7g="
 
-    matrix:
-        - CONDA_PY=27  CONDA_NPY=18
+
+
+
+  global:
+
+    # The BINSTAR_TOKEN secure variable. This is defined canonically in forge.yml.
+    - secure: "P4L9t6CRubcwWh4sVpCgGJRQ8yWa6zl/284q9p1m2LF29pqZa31nn/palni50ugKuhBBICWziYfdXWHdCTfUVVoJFkXhIRNJb7HjnfcgJfjzTs79lDGm45urUVT9LC9j3wEsA/zM4cbrZR+vasGkKtuc/Uk6PNApce1dIf/WYHo="
+
+
+
+
 
 install:
-    # Install makeinfo - needed for constructing configuration files via autoreconf (in particular for udunits)
-    - if [[ "$OSTYPE" == "linux-gnu" ]]; then sudo apt-get install texinfo; fi
+    - |
+      MINICONDA_URL="http://repo.continuum.io/miniconda"
+      MINICONDA_FILE="Miniconda3-3.7.3-MacOSX-x86_64.sh"
+      wget "${MINICONDA_URL}/${MINICONDA_FILE}"
+      bash $MINICONDA_FILE -b
 
-    - wget https://raw.githubusercontent.com/pelson/Obvious-CI/v0.1.0/bootstrap-obvious-ci-and-miniconda.py
-    - python bootstrap-obvious-ci-and-miniconda.py ~/miniconda x64 2 --without-obvci && source ~/miniconda/bin/activate root
-    - conda config --set show_channel_urls True && conda config --add channels http://conda.binstar.org/pelson/channel/main
-    - conda install -c http://conda.binstar.org/pelson/channel/development --yes --quiet obvious-ci
-    - conda config --add channels http://conda.binstar.org/SciTools
-    - obvci_install_conda_build_tools.py
+      export PATH=/Users/travis/miniconda3/bin:$PATH
+
+      conda update --yes conda
+      conda install --yes conda-build jinja2 binstar
 
 script:
-    - obvci_conda_build_dir.py ./ SciTools --channel main
+  - conda build .
 
+after_success:
+  - ./ci_support/upload_or_check_non_existence.py ./ conda-forge --channel=main
