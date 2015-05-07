@@ -5,9 +5,22 @@ templates:
     run_docker_build: run_docker_build_matrix.tmpl
 circle: []
 build_setup: yum install -y expat-devel
+platforms:
+    linux:
+        build_setup: ...
+    osx:
+    windows:
+        # This was pulled into the template... what do we think of that?
+        #matrix:
+        #    TARGET_ARCH: ["x86", "x64"]
+        # TODO: This isn't real functionality yet.
+        skip: True
+        matrix_filter:
+            - TARGET_ARCH: "x86"
+              numpy: ">1.8"
 appveyor:
     secure:
-        BINSTAR_TOKEN: ""
+        BINSTAR_TOKEN: "wtylLGtp/ID3G3DFT2uxuLFXuijFqmxI6phj60izpNC3pxd585bR6k2oonf5iGGb"
 travis:
     secure:
         BINSTAR_TOKEN: "P4L9t6CRubcwWh4sVpCgGJRQ8yWa6zl/284q9p1m2LF29pqZa31nn/palni50ugKuhBBICWziYfdXWHdCTfUVVoJFkXhIRNJb7HjnfcgJfjzTs79lDGm45urUVT9LC9j3wEsA/zM4cbrZR+vasGkKtuc/Uk6PNApce1dIf/WYHo="
