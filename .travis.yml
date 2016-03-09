@@ -1,22 +1,8 @@
-# This file was generated automatically by conda-forge (vn 0.1.0).
 
-
-
+# This file was generated automatically from conda-smithy. To update this configuration,
+# update the conda-forge.yaml and/or the recipe/meta.yaml.
 
 language: objective-c
-
-
-
-env:
-
-
-
-
-  global:
-
-    # The BINSTAR_TOKEN secure variable. This is defined canonically in forge.yml.
-    - secure: "P4L9t6CRubcwWh4sVpCgGJRQ8yWa6zl/284q9p1m2LF29pqZa31nn/palni50ugKuhBBICWziYfdXWHdCTfUVVoJFkXhIRNJb7HjnfcgJfjzTs79lDGm45urUVT9LC9j3wEsA/zM4cbrZR+vasGkKtuc/Uk6PNApce1dIf/WYHo="
-
 
 
 
@@ -31,10 +17,15 @@ install:
       export PATH=/Users/travis/miniconda3/bin:$PATH
 
       conda update --yes conda
-      conda install --yes conda-build jinja2 binstar
+      conda install --yes conda-build jinja2 anaconda-client
+
+      
+      conda config --add channels conda-forge
+      
 
 script:
   - conda build ./recipe
 
 after_success:
+
   - ./ci_support/upload_or_check_non_existence.py ./recipe conda-forge --channel=main
